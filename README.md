@@ -13,9 +13,15 @@ Install dependencies and prepare the build directory:
 yarn
 ```
 
-To watch files for changes, and launch a dev server:
+To launch a dev server:
 
 ```sh
-yarn watch
+yarn start
+```
+
+To build:
+
+```sh
+yarn build
 ```
 
