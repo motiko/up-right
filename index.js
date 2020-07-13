@@ -19,8 +19,7 @@ async function detectPoseInRealTime(video) {
   canvas.height = videoHeight;
 
   async function poseDetectionFrame() {
-    let backAngleLeft = 0;
-    let backAngleRight = 0;
+    let backAngle = 0;
     let minPoseConfidence = 0.1;
     let minPartConfidence;
     const pose = await net.estimatePoses(video, {
@@ -43,7 +42,7 @@ async function detectPoseInRealTime(video) {
       const dy = leftShoulder.position.y - leftHip.position.y;
       const newAngle = Math.atan2(dy, dx);
       if (newAngle)
-        backAngleLeft = Math.abs(newAngle * (180 / Math.PI)).toFixed(2);
+        backAngle = Math.abs(newAngle * (180 / Math.PI)).toFixed(2);
     } else if (
       rightHip.score > minConfidence &&
       rightShoulder.score > minConfidence
@@ -52,13 +51,9 @@ async function detectPoseInRealTime(video) {
       const dy = rightShoulder.position.y - rightHip.position.y;
       const newAngle = Math.atan2(dy, dx);
       if (newAngle)
-        backAngleRight = Math.abs(newAngle * (180 / Math.PI)).toFixed(2);
+        backAngle = Math.abs(newAngle * (180 / Math.PI)).toFixed(2);
     }
-    const backAngle = Math.max(backAngleLeft, backAngleRight);
-    if (
-      (backAngle && backAngle < 90 - angleThreshold) ||
-      backAngle > 90 + angleThreshold
-    ) {
+    if (backAngle && angleThreshold <= Math.abs(backAngle - 90)) {
       warnSound.play();
     }
 
