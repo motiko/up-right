@@ -10,10 +10,9 @@
     "nosleep.js": "^0.11.0"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development parcel index.html --port 3000 --out-dir docs/",
+    "dev": "cross-env NODE_ENV=development parcel index.html --port 3000 --out-dir docs/",
     "build": "rm -rf docs && cross-env NODE_ENV=production parcel build index.html --public-url ./ --out-dir docs/",
-    "lint": "eslint .",
-    "link-local": "yalc link"
+    "lint": "eslint ."
   },
   "browser": {
     "crypto": false
@@ -22,8 +21,10 @@
     "@babel/core": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
+    "babel-eslint": "^10.1.0",
     "cross-env": "^5.2.0",
     "eslint": "^4.19.1",
+    "eslint-config-prettier": "^6.11.0",
     "parcel-bundler": "~1.12.4"
   }
 }
