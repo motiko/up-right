@@ -83,10 +83,10 @@ async function detectPoseInRealTime(video) {
 
     const imgPos = {
       x: width - (muteImg.width + 24),
-      y: height - (muteImg.height + 24),
+      y: 24,
     };
     ctx.globalAlpha = 0.7;
-    ctx.drawImage(soundMuted ? unmuteImg : muteImg, imgPos.x, imgPos.y);
+    ctx.drawImage(soundMuted ? muteImg : unmuteImg, imgPos.x, imgPos.y);
     ctx.globalAlpha = 1;
     if (rightWrist.score > 0.3) {
       let { x, y } = rightWrist.position;
@@ -101,7 +101,7 @@ async function detectPoseInRealTime(video) {
 
     ctx.font = "70px Verdana";
     ctx.fillStyle = "cyan";
-    ctx.fillText(`Back angle: ${backAngle}°`, 10, 90);
+    ctx.fillText(`Back angle: ${backAngle}°`, 10, height - 30);
 
     setTimeout(() => requestAnimationFrame(poseDetectionFrame), 600);
   }
