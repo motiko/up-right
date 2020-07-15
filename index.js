@@ -90,7 +90,7 @@ async function detectPoseInRealTime(video) {
     ctx.globalAlpha = 1;
     if (rightWrist.score > 0.3) {
       let { x, y } = rightWrist.position;
-      if (x > imgPos.x && y > imgPos.y) {
+      if (x > imgPos.x && y < imgPos.y + muteImg.height) {
         toggleSound();
       }
       drawCircle(x, y, ctx);
