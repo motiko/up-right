@@ -12,7 +12,7 @@ export function drawLine(a, b, scale, ctx) {
   ctx.stroke();
 }
 
-export function drawCircle(x, y, ctx) {
+export function drawCircle({ x, y }, ctx) {
   ctx.beginPath();
   ctx.arc(x, y, 70, 0, 2 * Math.PI);
   ctx.stroke();
@@ -35,28 +35,27 @@ export async function setupCamera(width, height) {
     video: {
       facingMode: "user",
       width: mobile ? undefined : width,
-      height: mobile ? undefined : height,
-    },
+      height: mobile ? undefined : height
+    }
   });
   video.srcObject = stream;
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     video.onloadedmetadata = () => {
       resolve(video);
     };
   });
 }
 
-
 export function throttle(fn, limit) {
-    let wait = false;
-    return function () {
-        if (!wait) {
-            fn();
-            wait = true;
-            setTimeout(function () {
-                wait = false;
-            }, limit);
-        }
+  let wait = false;
+  return function() {
+    if (!wait) {
+      fn();
+      wait = true;
+      setTimeout(function() {
+        wait = false;
+      }, limit);
     }
+  };
 }
