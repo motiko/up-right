@@ -3,7 +3,7 @@ import { drawLine, throttle, drawCircle, isMobile, setupCamera } from "./utils";
 import NoSleep from "nosleep.js";
 
 const width = window.innerWidth;
-const height = window.innerHeight
+const height = window.innerHeight;
 
 const upArrow = new Image();
 upArrow.src = require("./up-arrow.png");
@@ -35,6 +35,11 @@ let angleThreshold = 15;
 let soundMuted = false;
 const toggleSound = throttle(() => {
   soundMuted = !soundMuted;
+  if (!soundMuted) {
+    warnSound.play();
+  }
+}, 1000);
+const playWarnSound = throttle(() => {
   if (!soundMuted) {
     warnSound.play();
   }
@@ -82,7 +87,7 @@ async function detectPoseInRealTime(video) {
 
   async function poseDetectionFrame() {
     let backAngle = 0;
-    let minPoseConfidence = 0.7;
+    let minPoseConfidence = 0.6;
     let minPartConfidence = 0.6;
     let pose = await net.estimatePoses(video, {
       flipHorizontal: true,
@@ -118,14 +123,14 @@ async function detectPoseInRealTime(video) {
       if (newAngle) backAngle = Math.abs(newAngle * (180 / Math.PI)).toFixed(2);
     }
     if (backAngle && angleThreshold <= Math.abs(backAngle - 90)) {
-      if (!soundMuted) warnSound.play();
+      playWarnSound()
     }
 
     ctx.clearRect(0, 0, width, height);
     ctx.font = "70px Verdana";
     ctx.fillStyle = "cyan";
 
-    if (true) {
+    if (false) {
       ctx.save();
       ctx.scale(-1, 1);
       ctx.translate(-width, 0);
@@ -148,7 +153,7 @@ async function detectPoseInRealTime(video) {
     ctx.strokeStyle = "yellow";
     ctx.lineWidth = 4;
     drawCircle({ x: soundImgPos.x + 64, y: soundImgPos.y + 64 }, ctx);
-    if (rightWrist.score > 0.3) {
+    if (rightWrist.score > minPartConfidence) {
       let { x, y } = rightWrist.position;
       if (
         pointInCircle(
@@ -182,7 +187,7 @@ async function detectPoseInRealTime(video) {
 
     ctx.fillText(`Back angle: ${backAngle}°`, 10, height - 30);
 
-    setTimeout(() => requestAnimationFrame(poseDetectionFrame), 600);
+    setTimeout(() => requestAnimationFrame(poseDetectionFrame), 30);
   }
 
   poseDetectionFrame();
