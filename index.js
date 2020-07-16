@@ -2,8 +2,8 @@ import * as posenet from "@tensorflow-models/posenet";
 import { drawLine, throttle, drawCircle, isMobile, setupCamera } from "./utils";
 import NoSleep from "nosleep.js";
 
-const width = 1600;
-const height = 800;
+const width = window.innerWidth;
+const height = window.innerHeight
 
 const upArrow = new Image();
 upArrow.src = require("./up-arrow.png");
