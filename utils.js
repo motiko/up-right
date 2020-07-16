@@ -35,12 +35,12 @@ export async function setupCamera(width, height) {
     video: {
       facingMode: "user",
       width: mobile ? undefined : width,
-      height: mobile ? undefined : height
-    }
+      height: mobile ? undefined : height,
+    },
   });
   video.srcObject = stream;
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     video.onloadedmetadata = () => {
       resolve(video);
     };
@@ -49,11 +49,11 @@ export async function setupCamera(width, height) {
 
 export function throttle(fn, limit) {
   let wait = false;
-  return function() {
+  return function (...args) {
     if (!wait) {
-      fn();
+      fn(...args);
       wait = true;
-      setTimeout(function() {
+      setTimeout(function () {
         wait = false;
       }, limit);
     }
