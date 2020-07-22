@@ -11,20 +11,20 @@ const downArrow = new Image();
 downArrow.src = require("./down-arrow.png");
 const muteImg = new Image();
 muteImg.src = require("./mute.png");
-const unmuteImg = new Image(90, 90);
+const unmuteImg = new Image();
 unmuteImg.src = require("./speaker.png");
 
 const upImgPos = {
-  x: width / 5,
+  x: width / 4,
   y: height / 10,
 };
 const downImgPos = {
-  x: width / 5,
-  y: height / 10 + 128 + 16,
+  x: width / 4,
+  y: height / 10 + 142,
 };
 const soundImgPos = {
-  x: width - (muteImg.width + 64),
-  y: 64,
+  x: width - (muteImg.width + 142),
+  y: height / 10,
 };
 
 var warnSound = new Audio(
@@ -45,7 +45,7 @@ const playWarnSound = throttle(() => {
   if (!soundMuted) {
     warnSound.play();
   }
-}, 5000);
+}, 3000);
 
 const canvas = document.getElementById("output");
 const ctx = canvas.getContext("2d");
@@ -122,9 +122,8 @@ async function detectPoseInRealTime(video) {
     const rightShoulder = keypoints.find((k) => k.part === "rightShoulder");
     const leftHip = keypoints.find((k) => k.part === "leftHip");
     const leftShoulder = keypoints.find((k) => k.part === "leftShoulder");
-    const leftWrist = keypoints.find((k) => k.part === "leftWrist");
+    // const leftWrist = keypoints.find((k) => k.part === "leftWrist");
     const rightWrist = keypoints.find((k) => k.part === "rightWrist");
-    // console.log(leftWrist,rightWrist)
     const minConfidence = 0.5;
     if (
       leftHip.score > minConfidence &&
@@ -161,17 +160,15 @@ async function detectPoseInRealTime(video) {
       ctx.restore();
     }
 
-    ctx.globalAlpha = 0.7;
     ctx.drawImage(
       soundMuted ? muteImg : unmuteImg,
       soundImgPos.x,
       soundImgPos.y
     );
     ctx.drawImage(upArrow, upImgPos.x, upImgPos.y);
-    ctx.font = "64px Verdana";
-    ctx.fillText(angleThreshold, upImgPos.x - 128, downImgPos.y);
+    ctx.font = "48px Verdana";
+    ctx.fillText(angleThreshold, upImgPos.x - upArrow.width / 1.5, downImgPos.y);
     ctx.drawImage(downArrow, downImgPos.x, downImgPos.y);
-    ctx.globalAlpha = 1;
     ctx.strokeStyle = "yellow";
     ctx.lineWidth = 4;
     drawCircle({ x: soundImgPos.x + 64, y: soundImgPos.y + 64 }, ctx);
@@ -185,9 +182,13 @@ async function detectPoseInRealTime(video) {
       drawSkeleton(pose.keypoints, minPartConfidence, ctx);
     }
 
-    ctx.fillText(`Back angle: ${backAngle}°`, 10, height - 30);
+    ctx.fillText(
+      `Back angle: ${backAngle && Math.abs(backAngle - 90).toFixed(2)}°`,
+      10,
+      height - 30
+    );
 
-    setTimeout(() => requestAnimationFrame(poseDetectionFrame), 30);
+    setTimeout(() => requestAnimationFrame(poseDetectionFrame), 100);
   }
 
   poseDetectionFrame();
